@@ -226,19 +226,32 @@ func (c *client) sendReq(cmd, cmdResp nl80211Command, dat []byte) ([]genetlink.M
 	return msgs, nil
 }
 
+func (c *client) SetChannel(ifi *Interface, mhz int) error {
+	attrs := append(ifi.idAttrs(),
+		netlink.Attribute{
+			Type: nl80211.AttrWiphyFreq,
+			Data: nlenc.Uint32Bytes(uint32(mhz)),
+		})
+	return c.sendSetReq(attrs, nl80211.CmdSetChannel)
+}
+
 func (c *client) SetInterface(ifi *Interface, ifty InterfaceType) error {
 	attrs := append(ifi.idAttrs(),
 		netlink.Attribute{
 			Type: nl80211.AttrIftype,
 			Data: nlenc.Uint32Bytes(uint32(ifty)),
 		})
+	return c.sendSetReq(attrs, nl80211.CmdSetInterface)
+}
+
+func (c *client) sendSetReq(attrs []netlink.Attribute, cmd nl80211Command) error {
 	dat, err := netlink.MarshalAttributes(attrs)
 	if err != nil {
 		return err
 	}
 	req := genetlink.Message{
 		Header: genetlink.Header{
-			Command: nl80211.CmdSetInterface,
+			Command: uint8(cmd),
 			Version: c.familyVersion,
 		},
 		Data: dat,

@@ -32,6 +32,11 @@ func (c *client) StationInfo(ifi *Interface) (*StationInfo, error) {
 	return nil, errUnimplemented
 }
 
+// SetChannel always returns an error.
+func (c *client) SetChannel(_ *Interface, _ int) error {
+	return errUnimplemented
+}
+
 // SetInterface always returns an error.
 func (c *client) SetInterface(_ *Interface, _ InterfaceType) error {
 	return errUnimplemented

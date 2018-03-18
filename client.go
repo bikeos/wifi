@@ -50,6 +50,11 @@ func (c *Client) StationInfo(ifi *Interface) (*StationInfo, error) {
 	return c.c.StationInfo(ifi)
 }
 
+// SetChannel sets the interface's frequency.
+func (c *Client) SetChannel(ifi *Interface, mhz int) error {
+	return c.c.SetChannel(ifi, mhz)
+}
+
 func (c *Client) SetInterface(ifi *Interface, ifty InterfaceType) error {
 	return c.c.SetInterface(ifi, ifty)
 }
@@ -60,5 +65,6 @@ type osClient interface {
 	Interfaces() ([]*Interface, error)
 	BSS(ifi *Interface) (*BSS, error)
 	StationInfo(ifi *Interface) (*StationInfo, error)
+	SetChannel(ifi *Interface, mhz int) error
 	SetInterface(*Interface, InterfaceType) error
 }
