@@ -31,3 +31,8 @@ func (c *client) BSS(ifi *Interface) (*BSS, error) {
 func (c *client) StationInfo(ifi *Interface) (*StationInfo, error) {
 	return nil, errUnimplemented
 }
+
+// SetInterface always returns an error.
+func (c *client) SetInterface(_ *Interface, _ InterfaceType) error {
+	return errUnimplemented
+}

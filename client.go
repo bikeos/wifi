@@ -50,10 +50,15 @@ func (c *Client) StationInfo(ifi *Interface) (*StationInfo, error) {
 	return c.c.StationInfo(ifi)
 }
 
+func (c *Client) SetInterface(ifi *Interface, ifty InterfaceType) error {
+	return c.c.SetInterface(ifi, ifty)
+}
+
 // An osClient is the operating system-specific implementation of Client.
 type osClient interface {
 	Close() error
 	Interfaces() ([]*Interface, error)
 	BSS(ifi *Interface) (*BSS, error)
 	StationInfo(ifi *Interface) (*StationInfo, error)
+	SetInterface(*Interface, InterfaceType) error
 }

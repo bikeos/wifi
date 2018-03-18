@@ -226,6 +226,28 @@ func (c *client) sendReq(cmd, cmdResp nl80211Command, dat []byte) ([]genetlink.M
 	return msgs, nil
 }
 
+func (c *client) SetInterface(ifi *Interface, ifty InterfaceType) error {
+	attrs := append(ifi.idAttrs(),
+		netlink.Attribute{
+			Type: nl80211.AttrIftype,
+			Data: nlenc.Uint32Bytes(uint32(ifty)),
+		})
+	dat, err := netlink.MarshalAttributes(attrs)
+	if err != nil {
+		return err
+	}
+	req := genetlink.Message{
+		Header: genetlink.Header{
+			Command: nl80211.CmdSetInterface,
+			Version: c.familyVersion,
+		},
+		Data: dat,
+	}
+	flags := netlink.HeaderFlagsRequest | netlink.HeaderFlagsAcknowledge
+	_, err = c.c.Execute(req, c.familyID, flags)
+	return err
+}
+
 // checkMessages verifies that response messages from generic netlink contain
 // the command and family version we expect.
 func (c *client) checkMessages(msgs []genetlink.Message, command nl80211Command) error {
